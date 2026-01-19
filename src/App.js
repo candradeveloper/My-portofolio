@@ -1,7 +1,7 @@
-import React, { useState,/ useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Github, Mail, MapPin, ExternalLink, Code2, Star, GitFork, Eye, Menu, X, Phone } from 'lucide-react';
 
-export default function PortfolioWebsite() {
+function App() {
   const [typedText, setTypedText] = useState('');
   const [nameOffset, setNameOffset] = useState(0);
   const [githubData, setGithubData] = useState(null);
@@ -11,9 +11,8 @@ export default function PortfolioWebsite() {
   const [scrolled, setScrolled] = useState(false);
   const fullText = "Hello, I'm";
   const githubUsername = "candradeveloper";
-  const whatsappNumber = "6285733142558"; // Format internasional
+  const whatsappNumber = "6285733142558";
   
-  // Typing animation effect
   useEffect(() => {
     let index = 0;
     const typingInterval = setInterval(() => {
@@ -26,9 +25,8 @@ export default function PortfolioWebsite() {
     }, 150);
     
     return () => clearInterval(typingInterval);
-  }, []);
+  }, [fullText.length]);
   
-  // Name swipe animation
   useEffect(() => {
     let direction = 1;
     let position = 0;
@@ -43,7 +41,6 @@ export default function PortfolioWebsite() {
     return () => clearInterval(swipeInterval);
   }, []);
 
-  // Scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -53,18 +50,14 @@ export default function PortfolioWebsite() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch GitHub Data
   useEffect(() => {
     const fetchGitHubData = async () => {
       try {
         setLoading(true);
-        
-        // Fetch user data
         const userResponse = await fetch(`https://api.github.com/users/${githubUsername}`);
         const userData = await userResponse.json();
         setGithubData(userData);
         
-        // Fetch repositories
         const reposResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=6`);
         const reposData = await reposResponse.json();
         setRepositories(reposData);
@@ -77,7 +70,7 @@ export default function PortfolioWebsite() {
     };
     
     fetchGitHubData();
-  }, []);
+  }, [githubUsername]);
 
   const skills = [
     { name: 'React.js', level: 95 },
@@ -104,82 +97,47 @@ export default function PortfolioWebsite() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Navbar */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled ? 'bg-slate-950/95 backdrop-blur-lg border-b border-slate-800 shadow-lg' : 'bg-transparent'
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <div className="flex items-center">
-              <a href="#home" onClick={() => scrollToSection('home')} className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              <button onClick={() => scrollToSection('home')} className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                 CW
-              </a>
+              </button>
             </div>
 
-            {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="hover:text-emerald-400 transition-colors cursor-pointer">
-                Home
-              </a>
-              <a href="#stats" onClick={(e) => { e.preventDefault(); scrollToSection('stats'); }} className="hover:text-emerald-400 transition-colors cursor-pointer">
-                Stats
-              </a>
-              <a href="#skills" onClick={(e) => { e.preventDefault(); scrollToSection('skills'); }} className="hover:text-emerald-400 transition-colors cursor-pointer">
-                Skills
-              </a>
-              <a href="#projects" onClick={(e) => { e.preventDefault(); scrollToSection('projects'); }} className="hover:text-emerald-400 transition-colors cursor-pointer">
-                Projects
-              </a>
-              <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }} className="hover:text-emerald-400 transition-colors cursor-pointer">
-                Contact
-              </a>
+              <button onClick={() => scrollToSection('home')} className="hover:text-emerald-400 transition-colors cursor-pointer">Home</button>
+              <button onClick={() => scrollToSection('stats')} className="hover:text-emerald-400 transition-colors cursor-pointer">Stats</button>
+              <button onClick={() => scrollToSection('skills')} className="hover:text-emerald-400 transition-colors cursor-pointer">Skills</button>
+              <button onClick={() => scrollToSection('projects')} className="hover:text-emerald-400 transition-colors cursor-pointer">Projects</button>
+              <button onClick={() => scrollToSection('contact')} className="hover:text-emerald-400 transition-colors cursor-pointer">Contact</button>
             </div>
 
-            {/* CTA Button Desktop */}
             <div className="hidden md:block">
-              <button 
-                onClick={openWhatsApp}
-                className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all transform hover:scale-105 flex items-center gap-2"
-              >
+              <button onClick={openWhatsApp} className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all transform hover:scale-105 inline-flex items-center gap-2">
                 <Phone size={18} />
                 Hire Me
               </button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors"
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors">
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-slate-950/98 backdrop-blur-lg border-t border-slate-800">
             <div className="container mx-auto px-4 py-4 space-y-4">
-              <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="block py-2 hover:text-emerald-400 transition-colors">
-                Home
-              </a>
-              <a href="#stats" onClick={(e) => { e.preventDefault(); scrollToSection('stats'); }} className="block py-2 hover:text-emerald-400 transition-colors">
-                Stats
-              </a>
-              <a href="#skills" onClick={(e) => { e.preventDefault(); scrollToSection('skills'); }} className="block py-2 hover:text-emerald-400 transition-colors">
-                Skills
-              </a>
-              <a href="#projects" onClick={(e) => { e.preventDefault(); scrollToSection('projects'); }} className="block py-2 hover:text-emerald-400 transition-colors">
-                Projects
-              </a>
-              <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }} className="block py-2 hover:text-emerald-400 transition-colors">
-                Contact
-              </a>
-              <button 
-                onClick={openWhatsApp}
-                className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all"
-              >
+              <button onClick={() => scrollToSection('home')} className="block py-2 hover:text-emerald-400 transition-colors w-full text-left">Home</button>
+              <button onClick={() => scrollToSection('stats')} className="block py-2 hover:text-emerald-400 transition-colors w-full text-left">Stats</button>
+              <button onClick={() => scrollToSection('skills')} className="block py-2 hover:text-emerald-400 transition-colors w-full text-left">Skills</button>
+              <button onClick={() => scrollToSection('projects')} className="block py-2 hover:text-emerald-400 transition-colors w-full text-left">Projects</button>
+              <button onClick={() => scrollToSection('contact')} className="block py-2 hover:text-emerald-400 transition-colors w-full text-left">Contact</button>
+              <button onClick={openWhatsApp} className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all">
                 <Phone size={18} />
                 Hire Me
               </button>
@@ -188,16 +146,12 @@ export default function PortfolioWebsite() {
         )}
       </nav>
 
-      {/* Hero Section */}
       <div id="home" className="container mx-auto px-4 pt-32 pb-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-4 text-2xl md:text-3xl text-emerald-400 font-mono">
             {typedText}<span className="animate-pulse">|</span>
           </div>
-          <h1 
-            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent transition-transform duration-300"
-            style={{ transform: `translateX(${nameOffset}px)` }}
-          >
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent transition-transform duration-300" style={{ transform: `translateX(${nameOffset}px)` }}>
             Candra Wicaksono
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 mb-4">Full-Stack Developer</p>
@@ -206,7 +160,6 @@ export default function PortfolioWebsite() {
             I turn ideas into elegant solutions with clean code and modern technologies.
           </p>
           
-          {/* Contact Info */}
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm">
             <div className="flex items-center gap-2 text-slate-300">
               <Github size={18} className="text-emerald-400" />
@@ -226,12 +179,8 @@ export default function PortfolioWebsite() {
             </div>
           </div>
 
-          {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4">
-            <a 
-              href="mailto:candradeveloper@gmail.com"
-              className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/30"
-            >
+            <a href="mailto:candradeveloper@gmail.com" className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/30">
               Get in Touch
             </a>
             <button className="px-8 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition-all border border-slate-700">
@@ -239,7 +188,6 @@ export default function PortfolioWebsite() {
             </button>
           </div>
 
-          {/* Social Links */}
           <div className="flex justify-center gap-4 mt-8">
             <a href={`https://github.com/${githubUsername}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-slate-800 hover:bg-emerald-500 rounded-lg transition-all transform hover:scale-110">
               <Github size={24} />
@@ -254,7 +202,6 @@ export default function PortfolioWebsite() {
         </div>
       </div>
 
-      {/* GitHub Stats */}
       {!loading && githubData && (
         <div id="stats" className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto">
@@ -291,7 +238,6 @@ export default function PortfolioWebsite() {
         </div>
       )}
 
-      {/* GitHub Activity Visualization */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">
@@ -337,7 +283,6 @@ export default function PortfolioWebsite() {
         </div>
       </div>
 
-      {/* Technical Skills */}
       <div id="skills" className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">
@@ -360,7 +305,6 @@ export default function PortfolioWebsite() {
             ))}
           </div>
 
-          {/* Tech Stack Tags */}
           <div className="mt-12 flex flex-wrap justify-center gap-3">
             {['JavaScript', 'TypeScript', 'React', 'Node.js', 'MongoDB', 'PostgreSQL', 'Docker', 'AWS', 'Git'].map((tech, i) => (
               <span key={i} className="px-4 py-2 bg-slate-800 rounded-full text-sm border border-slate-700 hover:border-emerald-500 transition-colors cursor-default">
@@ -371,7 +315,6 @@ export default function PortfolioWebsite() {
         </div>
       </div>
 
-      {/* GitHub Repositories - Real Data */}
       <div id="projects" className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-12 text-center">
@@ -390,21 +333,11 @@ export default function PortfolioWebsite() {
                   <div className="flex justify-between items-start mb-4">
                     <Code2 className="text-emerald-400" size={32} />
                     <div className="flex gap-2">
-                      <a 
-                        href={repo.html_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-                      >
+                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
                         <Github size={20} />
                       </a>
                       {repo.homepage && (
-                        <a 
-                          href={repo.homepage} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-                        >
+                        <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
                           <ExternalLink size={20} />
                         </a>
                       )}
@@ -459,12 +392,7 @@ export default function PortfolioWebsite() {
           )}
           
           <div className="text-center mt-12">
-            <a 
-              href={`https://github.com/${githubUsername}?tab=repositories`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition-all border border-slate-700 hover:border-emerald-500"
-            >
+            <a href={`https://github.com/${githubUsername}?tab=repositories`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition-all border border-slate-700 hover:border-emerald-500">
               <Github size={20} />
               View All Repositories
             </a>
@@ -472,7 +400,6 @@ export default function PortfolioWebsite() {
         </div>
       </div>
 
-      {/* Get in Touch Section */}
       <div id="contact" className="container mx-auto px-4 py-20">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">
@@ -505,17 +432,11 @@ export default function PortfolioWebsite() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <a 
-                href="mailto:candradeveloper@gmail.com"
-                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition-all transform hover:scale-105 border border-slate-700"
-              >
+              <a href="mailto:candradeveloper@gmail.com" className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition-all transform hover:scale-105 border border-slate-700">
                 <Mail size={20} />
                 Email Me
               </a>
-              <button 
-                onClick={openWhatsApp}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/30"
-              >
+              <button onClick={openWhatsApp} className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/30">
                 <Phone size={20} />
                 WhatsApp
               </button>
@@ -524,7 +445,6 @@ export default function PortfolioWebsite() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="border-t border-slate-800 py-8">
         <div className="container mx-auto px-4 text-center text-slate-500">
           <p>© 2026 Candra Wicaksono. All rights reserved.</p>
@@ -534,3 +454,5 @@ export default function PortfolioWebsite() {
     </div>
   );
 }
+
+export default App;
